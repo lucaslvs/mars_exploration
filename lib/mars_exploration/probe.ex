@@ -29,54 +29,6 @@ defmodule MarsExploration.Probe do
     end
   end
 
-  defp move(%__MODULE__{direction: direction, column: column, line: line} = probe) do
-    case direction do
-      "N" ->
-        Map.put(probe, :column, column + 1)
-
-      "S" ->
-        Map.put(probe, :column, column - 1)
-
-      "E" ->
-        Map.put(probe, :line, line + 1)
-
-      "W" ->
-        Map.put(probe, :line, line - 1)
-    end
-  end
-
-  defp turn_left(%__MODULE__{direction: direction} = probe) do
-    case direction do
-      "N" ->
-        Map.put(probe, :direction, "W")
-
-      "S" ->
-        Map.put(probe, :direction, "E")
-
-      "E" ->
-        Map.put(probe, :direction, "N")
-
-      "W" ->
-        Map.put(probe, :direction, "S")
-    end
-  end
-
-  defp turn_right(%__MODULE__{direction: direction} = probe) do
-    case direction do
-      "N" ->
-        Map.put(probe, :direction, "E")
-
-      "S" ->
-        Map.put(probe, :direction, "W")
-
-      "E" ->
-        Map.put(probe, :direction, "S")
-
-      "W" ->
-        Map.put(probe, :direction, "N")
-    end
-  end
-
   defp params_are_valid?(params) when is_map(params) do
     direction_is_valid?(params) and position_is_valid?(params)
   end
@@ -97,4 +49,19 @@ defmodule MarsExploration.Probe do
   defp action_is_valid?(action) when is_binary(action) and action in @valid_actions, do: true
 
   defp action_is_valid?(_action), do: false
+
+  defp turn_left(%{direction: "N"} = probe), do: Map.put(probe, :direction, "W")
+  defp turn_left(%{direction: "S"} = probe), do: Map.put(probe, :direction, "E")
+  defp turn_left(%{direction: "E"} = probe), do: Map.put(probe, :direction, "N")
+  defp turn_left(%{direction: "W"} = probe), do: Map.put(probe, :direction, "S")
+
+  defp turn_right(%{direction: "N"} = probe), do: Map.put(probe, :direction, "E")
+  defp turn_right(%{direction: "S"} = probe), do: Map.put(probe, :direction, "W")
+  defp turn_right(%{direction: "E"} = probe), do: Map.put(probe, :direction, "S")
+  defp turn_right(%{direction: "W"} = probe), do: Map.put(probe, :direction, "N")
+
+  defp move(%{direction: "N", column: column} = probe), do: Map.put(probe, :column, column + 1)
+  defp move(%{direction: "S", column: column} = probe), do: Map.put(probe, :column, column - 1)
+  defp move(%{direction: "E", line: line} = probe), do: Map.put(probe, :line, line + 1)
+  defp move(%{direction: "W", line: line} = probe), do: Map.put(probe, :line, line - 1)
 end
