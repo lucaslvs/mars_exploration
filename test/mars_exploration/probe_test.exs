@@ -47,32 +47,18 @@ defmodule MarsExploration.ProbeTest do
       assert updated_probe.direction == "W"
     end
 
-    test "must turn direction to S(outh) when receive L(eft) action and current direction is W(est)" do
-      params = %{direction: "W", column: 0, line: 0}
-      probe = Probe.new(params)
-      assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
-      assert updated_probe.direction == "S"
-    end
-
-    test "must turn direction to E(ast) when receive L(eft) action and current direction is S(outh)" do
-      params = %{direction: "S", column: 0, line: 0}
-      probe = Probe.new(params)
-      assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
-      assert updated_probe.direction == "E"
-    end
-
-    test "must turn direction to N(orth) when receive L(eft) action and current direction is E(ast)" do
-      params = %{direction: "E", column: 0, line: 0}
-      probe = Probe.new(params)
-      assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
-      assert updated_probe.direction == "N"
-    end
-#
     test "must turn direction to E(ast) when receive R(ight) action and current direction is N(orth)" do
       params = %{direction: "N", column: 0, line: 0}
       probe = Probe.new(params)
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "R")
       assert updated_probe.direction == "E"
+    end
+
+    test "must turn direction to S(outh) when receive L(eft) action and current direction is W(est)" do
+      params = %{direction: "W", column: 0, line: 0}
+      probe = Probe.new(params)
+      assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
+      assert updated_probe.direction == "S"
     end
 
     test "must turn direction to N(orth) when receive R(ight) action and current direction is W(est)" do
@@ -82,11 +68,25 @@ defmodule MarsExploration.ProbeTest do
       assert updated_probe.direction == "N"
     end
 
+    test "must turn direction to E(ast) when receive L(eft) action and current direction is S(outh)" do
+      params = %{direction: "S", column: 0, line: 0}
+      probe = Probe.new(params)
+      assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
+      assert updated_probe.direction == "E"
+    end
+
     test "must turn direction to W(est) when receive R(ight) action and current direction is S(outh)" do
       params = %{direction: "S", column: 0, line: 0}
       probe = Probe.new(params)
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "R")
       assert updated_probe.direction == "W"
+    end
+
+    test "must turn direction to N(orth) when receive L(eft) action and current direction is E(ast)" do
+      params = %{direction: "E", column: 0, line: 0}
+      probe = Probe.new(params)
+      assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
+      assert updated_probe.direction == "N"
     end
 
     test "must turn direction to N(orth) when receive R(ight) action and current direction is E(ast)" do
