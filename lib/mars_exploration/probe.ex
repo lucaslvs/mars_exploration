@@ -17,10 +17,13 @@ defmodule MarsExploration.Probe do
   def perform_action(%__MODULE__{} = probe, "R"), do: {:ok, probe, turn_right(probe)}
 
   def perform_action(%__MODULE__{} = probe, action) do
-    if action_is_valid?(action) do
-      {:ok, probe, move(probe)}
+    with true <- action_is_valid?(action),
+         %__MODULE__{} = updated_probe <- move(probe),
+         true <- Map.get(updated_probe, :column) |> position_is_valid?(),
+         true <- Map.get(updated_probe, :line) |> position_is_valid?() do
+      {:ok, probe, updated_probe}
     else
-      {:error, :invalid_action, probe}
+      _ -> {:error, :invalid_action, probe}
     end
   end
 
@@ -49,12 +52,14 @@ defmodule MarsExploration.Probe do
 
   defp position_is_valid?(params) when is_map(params) do
     Map.has_key?(params, :column) and
-      Map.has_key?(params, :line) and
-      is_integer(Map.get(params, :column)) and
-      is_integer(Map.get(params, :line)) and
-      Map.get(params, :column) >= 0 and
-      Map.get(params, :line) >= 0
+    Map.has_key?(params, :line) and
+    params |> Map.get(:column) |> position_is_valid?() and
+    params |> Map.get(:line) |> position_is_valid?()
   end
+
+  defp position_is_valid?(value) when is_integer(value), do: value >= 0
+
+  defp position_is_valid?(_position), do: false
 
   defp action_is_valid?(action) when is_binary(action) and action in @valid_actions, do: true
 
