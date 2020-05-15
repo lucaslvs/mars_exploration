@@ -13,21 +13,31 @@ defmodule MarsExploration.Probe do
     end
   end
 
+  def perform_action(%__MODULE__{} = probe, "L"), do: {:ok, probe, turn_left(probe)}
+  def perform_action(%__MODULE__{} = probe, "R"), do: {:ok, probe, turn_right(probe)}
+
   def perform_action(%__MODULE__{} = probe, action) do
-    cond do
-      not action_is_valid?(action) ->
-        {:error, :invalid_move, probe}
-
-      action == "L" ->
-        {:ok, probe, turn_left(probe)}
-
-      action == "R" ->
-        {:ok, probe, turn_right(probe)}
-
-      true ->
-        {:ok, probe, move(probe)}
+    if action_is_valid?(action) do
+      {:ok, probe, move(probe)}
+    else
+      {:error, :invalid_action, probe}
     end
   end
+
+  defp turn_left(%{direction: "N"} = probe), do: Map.put(probe, :direction, "W")
+  defp turn_left(%{direction: "S"} = probe), do: Map.put(probe, :direction, "E")
+  defp turn_left(%{direction: "E"} = probe), do: Map.put(probe, :direction, "N")
+  defp turn_left(%{direction: "W"} = probe), do: Map.put(probe, :direction, "S")
+
+  defp turn_right(%{direction: "N"} = probe), do: Map.put(probe, :direction, "E")
+  defp turn_right(%{direction: "S"} = probe), do: Map.put(probe, :direction, "W")
+  defp turn_right(%{direction: "E"} = probe), do: Map.put(probe, :direction, "S")
+  defp turn_right(%{direction: "W"} = probe), do: Map.put(probe, :direction, "N")
+
+  defp move(%{direction: "N", column: column} = probe), do: Map.put(probe, :column, column + 1)
+  defp move(%{direction: "S", column: column} = probe), do: Map.put(probe, :column, column - 1)
+  defp move(%{direction: "E", line: line} = probe), do: Map.put(probe, :line, line + 1)
+  defp move(%{direction: "W", line: line} = probe), do: Map.put(probe, :line, line - 1)
 
   defp params_are_valid?(params) when is_map(params) do
     direction_is_valid?(params) and position_is_valid?(params)
@@ -49,19 +59,4 @@ defmodule MarsExploration.Probe do
   defp action_is_valid?(action) when is_binary(action) and action in @valid_actions, do: true
 
   defp action_is_valid?(_action), do: false
-
-  defp turn_left(%{direction: "N"} = probe), do: Map.put(probe, :direction, "W")
-  defp turn_left(%{direction: "S"} = probe), do: Map.put(probe, :direction, "E")
-  defp turn_left(%{direction: "E"} = probe), do: Map.put(probe, :direction, "N")
-  defp turn_left(%{direction: "W"} = probe), do: Map.put(probe, :direction, "S")
-
-  defp turn_right(%{direction: "N"} = probe), do: Map.put(probe, :direction, "E")
-  defp turn_right(%{direction: "S"} = probe), do: Map.put(probe, :direction, "W")
-  defp turn_right(%{direction: "E"} = probe), do: Map.put(probe, :direction, "S")
-  defp turn_right(%{direction: "W"} = probe), do: Map.put(probe, :direction, "N")
-
-  defp move(%{direction: "N", column: column} = probe), do: Map.put(probe, :column, column + 1)
-  defp move(%{direction: "S", column: column} = probe), do: Map.put(probe, :column, column - 1)
-  defp move(%{direction: "E", line: line} = probe), do: Map.put(probe, :line, line + 1)
-  defp move(%{direction: "W", line: line} = probe), do: Map.put(probe, :line, line - 1)
 end
