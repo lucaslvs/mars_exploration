@@ -41,15 +41,35 @@ defmodule MarsExploration.CoreTest do
       {:ok, probe} = Core.create_probe(0, 0, "N", ["M"])
 
       assert Enum.empty?(highland.probes) == true
-      assert {:ok, highland} = Core.set_probe_in_highland(highland, probe)
+      assert {:ok, %Highland{} = highland} = Core.set_probe_in_highland(highland, probe)
       assert Enum.empty?(highland.probes) == false
       assert [probe] = highland.probes
     end
   end
 
-  # describe "perform_next_action/2" do
+  describe "perform_next_action/2" do
+    test "should perform next action of received probe" do
+      {:ok, highland} = Core.create_highland(0, 1)
+      {:ok, probe} = Core.create_probe(0, 0, "N", ["M"])
+      {:ok, highland} = Core.set_probe_in_highland(highland, probe)
 
-  # end
+      assert {:ok, %Highland{} = highland} = Core.perform_next_action(highland, probe)
+
+      probe = List.first(highland.probes)
+
+      assert probe.column == 1
+      assert Enum.empty?(probe.actions) == true
+    end
+
+    test "should not performs probe action when all probe actions have been completed" do
+      {:ok, highland} = Core.create_highland(0, 1)
+      {:ok, probe} = Core.create_probe(0, 0, "N", ["M"])
+      {:ok, highland} = Core.set_probe_in_highland(highland, probe)
+      {:ok, %Highland{probes: [probe]}} = Core.perform_next_action(highland, probe)
+
+      assert {:error, %Highland{probes: [probe]}} = Core.perform_next_action(highland, probe)
+    end
+  end
 
   # describe "all_probe_actions_have_been_completed/1" do
 
