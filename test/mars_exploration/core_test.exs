@@ -35,9 +35,17 @@ defmodule MarsExploration.CoreTest do
     end
   end
 
-  # describe "set_probe_in_highland/2" do
+  describe "set_probe_in_highland/2" do
+    test "should push a probe in highland" do
+      {:ok, highland} = Core.create_highland(0, 0)
+      {:ok, probe} = Core.create_probe(0, 0, "N", ["M"])
 
-  # end
+      assert Enum.empty?(highland.probes) == true
+      assert {:ok, highland} = Core.set_probe_in_highland(highland, probe)
+      assert Enum.empty?(highland.probes) == false
+      assert [probe] = highland.probes
+    end
+  end
 
   # describe "perform_next_action/2" do
 
