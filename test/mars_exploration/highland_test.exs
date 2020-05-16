@@ -133,7 +133,15 @@ defmodule MarsExploration.HighlandTest do
       range_positions = 0..5
 
       for line <- range_positions, column <- range_positions do
-        assert Highland.has_probe_in_position?(highland, column, line) == true
+        assert Highland.has_position?(highland, column, line) == true
+      end
+    end
+
+    test "must return false when position received not exist in highland boundaries", %{highland: highland} do
+      range_positions = 6..11
+
+      for line <- range_positions, column <- range_positions do
+        assert Highland.has_position?(highland, column, line) == false
       end
     end
   end
