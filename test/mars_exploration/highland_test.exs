@@ -92,9 +92,33 @@ defmodule MarsExploration.HighlandTest do
     end
   end
 
-  # describe "has_probe_in_position/3" do
+  describe "has_probe_in_position?/3" do
+    alias MarsExploration.Probe
 
-  # end
+    @highland_params %{column: 0, line: 0}
+    @probe_param %{direction: "N", column: 0, line: 0}
+
+    setup do
+      highland = Highland.new(@highland_params)
+      probe = Probe.new(@probe_param)
+
+      {:ok, highland: highland, probe: probe}
+    end
+
+    test "must returns true when position received has a probe in highland", %{highland: highland, probe: probe} do
+      {:ok, highland} = Highland.push_probe(highland, probe)
+
+      assert Highland.has_probe_in_position?(highland, 0, 0) == true
+    end
+
+    test "must returns false when position received don't have a probe in highland", %{highland: highland, probe: probe} do
+      {:ok, highland} = Highland.push_probe(highland, probe)
+
+      assert Highland.has_probe_in_position?(highland, 1, 1) == false
+      assert Highland.has_probe_in_position?(highland, 0, 1) == false
+      assert Highland.has_probe_in_position?(highland, 1, 0) == false
+    end
+  end
 
   # describe "has_position?/3" do
 
