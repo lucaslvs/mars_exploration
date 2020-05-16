@@ -16,7 +16,7 @@ defmodule MarsExploration.Core.Probe do
   def get_next_action(%__MODULE__{actions: actions} = probe) do
     cond do
       Enum.empty?(actions) ->
-        {:error, :no_found, probe}
+        {:error, :not_found, probe}
 
       true ->
         [next_action | remaining_actions] = actions

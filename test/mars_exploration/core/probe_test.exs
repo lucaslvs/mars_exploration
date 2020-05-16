@@ -39,6 +39,25 @@ defmodule MarsExploration.Core.ProbeTest do
     end
   end
 
+  describe "get_next_action/1" do
+    @probe_params %{actions: ["M", "L", "R"], direction: "N", column: 0, line: 0}
+
+    test "must return next action in probe" do
+      probe = Probe.new(@probe_params)
+
+      Enum.each(probe.actions, fn _action ->
+        assert {:ok, action, probe} = Probe.get_next_action(probe)
+        assert action not in probe.actions == true
+      end)
+    end
+
+    test "must return a error when probe actions is empty" do
+      probe = Probe.new(%{actions: [], direction: "N", column: 0, line: 0})
+
+      assert {:error, :not_found, probe} = Probe.get_next_action(probe)
+    end
+  end
+
   describe "perform_action/2" do
     test "must turn direction to W(est) when receive L(eft) action and current direction is N(orth)" do
       params = %{actions: ["M"], direction: "N", column: 0, line: 0}
