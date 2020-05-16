@@ -1,5 +1,5 @@
-defmodule MarsExploration.Highland do
-  alias MarsExploration.Probe
+defmodule MarsExploration.Core.Highland do
+  alias MarsExploration.Core.Probe
 
   @enforce_keys [:column, :line, :probes]
 

@@ -1,7 +1,7 @@
-defmodule MarsExploration.HighlandTest do
+defmodule MarsExploration.Core.HighlandTest do
   use ExUnit.Case
 
-  alias MarsExploration.Highland
+  alias MarsExploration.Core.Highland
 
   describe "new/1" do
     @valid_params [
@@ -40,7 +40,7 @@ defmodule MarsExploration.HighlandTest do
   end
 
   describe "push_probe/2" do
-    alias MarsExploration.Probe
+    alias MarsExploration.Core.Probe
 
     @highland_params %{column: 0, line: 0}
     @valid_probe_param %{direction: "N", column: 0, line: 0}
@@ -93,7 +93,7 @@ defmodule MarsExploration.HighlandTest do
   end
 
   describe "has_probe_in_position?/3" do
-    alias MarsExploration.Probe
+    alias MarsExploration.Core.Probe
 
     @highland_params %{column: 0, line: 0}
     @probe_param %{direction: "N", column: 0, line: 0}

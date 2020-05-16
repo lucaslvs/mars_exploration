@@ -1,4 +1,4 @@
-defmodule MarsExploration.Probe do
+defmodule MarsExploration.Core.Probe do
   @enforce_keys [:direction, :column, :line]
   @valid_directions ["N", "S", "E", "W"]
   @valid_actions ["L", "R", "M"]

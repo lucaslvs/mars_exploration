@@ -1,7 +1,7 @@
-defmodule MarsExploration.ProbeTest do
+defmodule MarsExploration.Core.ProbeTest do
   use ExUnit.Case
 
-  alias MarsExploration.Probe
+  alias MarsExploration.Core.Probe
 
   describe "new/1" do
     @valid_params [
