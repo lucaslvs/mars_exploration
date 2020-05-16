@@ -120,7 +120,21 @@ defmodule MarsExploration.HighlandTest do
     end
   end
 
-  # describe "has_position?/3" do
+  describe "has_position?/3" do
+    @highland_params %{column: 5, line: 5}
 
-  # end
+    setup do
+      highland = Highland.new(@highland_params)
+
+      {:ok, highland: highland}
+    end
+
+    test "must return true when position received exist in highland boundaries", %{highland: highland} do
+      range_positions = 0..5
+
+      for line <- range_positions, column <- range_positions do
+        assert Highland.has_probe_in_position?(highland, column, line) == true
+      end
+    end
+  end
 end
