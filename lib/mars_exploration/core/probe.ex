@@ -65,7 +65,6 @@ defmodule MarsExploration.Core.Probe do
     params
     |> Map.get(:actions)
     |> Enum.all?(&action_is_valid?/1)
-
   rescue
     _ ->
       false
