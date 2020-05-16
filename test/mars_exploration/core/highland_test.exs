@@ -43,11 +43,11 @@ defmodule MarsExploration.Core.HighlandTest do
     alias MarsExploration.Core.Probe
 
     @highland_params %{column: 0, line: 0}
-    @valid_probe_param %{direction: "N", column: 0, line: 0}
+    @valid_probe_param %{actions: ["M"], direction: "N", column: 0, line: 0}
     @invalid_probe_params [
-      %{direction: "N", column: 2, line: 2},
-      %{direction: "N", column: 1, line: 2},
-      %{direction: "N", column: 2, line: 1}
+      %{actions: ["M"], direction: "N", column: 2, line: 2},
+      %{actions: ["M"], direction: "N", column: 1, line: 2},
+      %{actions: ["M"], direction: "N", column: 2, line: 1}
     ]
 
     setup do
@@ -96,7 +96,7 @@ defmodule MarsExploration.Core.HighlandTest do
     alias MarsExploration.Core.Probe
 
     @highland_params %{column: 0, line: 0}
-    @probe_param %{direction: "N", column: 0, line: 0}
+    @probe_param %{actions: ["M"], direction: "N", column: 0, line: 0}
 
     setup do
       highland = Highland.new(@highland_params)
@@ -105,13 +105,19 @@ defmodule MarsExploration.Core.HighlandTest do
       {:ok, highland: highland, probe: probe}
     end
 
-    test "must returns true when position received has a probe in highland", %{highland: highland, probe: probe} do
+    test "must returns true when position received has a probe in highland", %{
+      highland: highland,
+      probe: probe
+    } do
       {:ok, highland} = Highland.push_probe(highland, probe)
 
       assert Highland.has_probe_in_position?(highland, 0, 0) == true
     end
 
-    test "must returns false when position received don't have a probe in highland", %{highland: highland, probe: probe} do
+    test "must returns false when position received don't have a probe in highland", %{
+      highland: highland,
+      probe: probe
+    } do
       {:ok, highland} = Highland.push_probe(highland, probe)
 
       assert Highland.has_probe_in_position?(highland, 1, 1) == false
@@ -129,7 +135,9 @@ defmodule MarsExploration.Core.HighlandTest do
       {:ok, highland: highland}
     end
 
-    test "must return true when position received exist in highland boundaries", %{highland: highland} do
+    test "must return true when position received exist in highland boundaries", %{
+      highland: highland
+    } do
       range_positions = 0..5
 
       for line <- range_positions, column <- range_positions do
@@ -137,7 +145,9 @@ defmodule MarsExploration.Core.HighlandTest do
       end
     end
 
-    test "must return false when position received not exist in highland boundaries", %{highland: highland} do
+    test "must return false when position received not exist in highland boundaries", %{
+      highland: highland
+    } do
       range_positions = 6..11
 
       for line <- range_positions, column <- range_positions do

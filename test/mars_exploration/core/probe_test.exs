@@ -5,20 +5,20 @@ defmodule MarsExploration.Core.ProbeTest do
 
   describe "new/1" do
     @valid_params [
-      %{direction: "N", column: 0, line: 0},
-      %{direction: "S", column: :rand.uniform(100), line: :rand.uniform(100)},
-      %{direction: "E", column: :rand.uniform(100), line: :rand.uniform(100)},
-      %{direction: "W", column: :rand.uniform(100), line: :rand.uniform(100)}
+      %{actions: ["M", "L", "R"], direction: "N", column: 0, line: 0},
+      %{actions: ["L"], direction: "S", column: :rand.uniform(100), line: :rand.uniform(100)},
+      %{actions: ["R"], direction: "E", column: :rand.uniform(100), line: :rand.uniform(100)},
+      %{actions: ["M"], direction: "W", column: :rand.uniform(100), line: :rand.uniform(100)}
     ]
 
     @invalid_params [
       Map.new(),
-      %{direction: nil, column: nil, line: nil},
-      %{direction: nil, column: nil},
-      %{direction: nil},
-      %{direction: :rand.uniform(100), column: "nil", line: "2"},
-      %{direction: "N", column: [], line: -1},
-      %{direction: "S", column: -12, line: :rand.uniform(100)}
+      %{actions: nil, direction: nil, column: nil, line: nil},
+      %{actions: [], direction: nil, column: nil},
+      %{actions: [], direction: nil},
+      %{actions: nil},
+      %{actions: ["Z"], direction: "N", column: [], line: -1},
+      %{actions: ["12"], direction: "S", column: -12, line: :rand.uniform(100)}
     ]
 
     test "must return a probe when receiving valid parameters" do
@@ -41,7 +41,7 @@ defmodule MarsExploration.Core.ProbeTest do
 
   describe "perform_action/2" do
     test "must turn direction to W(est) when receive L(eft) action and current direction is N(orth)" do
-      params = %{direction: "N", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "N", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
@@ -51,7 +51,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must turn direction to E(ast) when receive R(ight) action and current direction is N(orth)" do
-      params = %{direction: "N", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "N", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "R")
@@ -61,7 +61,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must increment column value when receive M(ove) action and current direction is N(orth)" do
-      params = %{direction: "N", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "N", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "M")
@@ -71,7 +71,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must turn direction to S(outh) when receive L(eft) action and current direction is W(est)" do
-      params = %{direction: "W", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "W", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
@@ -81,7 +81,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must turn direction to N(orth) when receive R(ight) action and current direction is W(est)" do
-      params = %{direction: "W", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "W", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "R")
@@ -91,7 +91,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must decrement line value when receive M(ove) action and current direction is W(est)" do
-      params = %{direction: "W", column: 0, line: 1}
+      params = %{actions: ["M"], direction: "W", column: 0, line: 1}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "M")
@@ -101,7 +101,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must not decrement line value when receive M(ove) action and current direction is W(est)" do
-      params = %{direction: "W", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "W", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:error, :invalid_action, probe} = Probe.perform_action(probe, "M")
@@ -111,7 +111,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must turn direction to E(ast) when receive L(eft) action and current direction is S(outh)" do
-      params = %{direction: "S", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "S", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
@@ -121,7 +121,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must turn direction to W(est) when receive R(ight) action and current direction is S(outh)" do
-      params = %{direction: "S", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "S", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "R")
@@ -131,7 +131,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must decrement column value when receive M(ove) action and current direction is S(outh)" do
-      params = %{direction: "S", column: 1, line: 0}
+      params = %{actions: ["M"], direction: "S", column: 1, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "M")
@@ -141,7 +141,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must not decrement column value when receive M(ove) action and current direction is S(outh)" do
-      params = %{direction: "S", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "S", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:error, :invalid_action, probe} = Probe.perform_action(probe, "M")
@@ -151,7 +151,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must turn direction to N(orth) when receive L(eft) action and current direction is E(ast)" do
-      params = %{direction: "E", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "E", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "L")
@@ -161,7 +161,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must turn direction to N(orth) when receive R(ight) action and current direction is E(ast)" do
-      params = %{direction: "E", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "E", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "R")
@@ -171,7 +171,7 @@ defmodule MarsExploration.Core.ProbeTest do
     end
 
     test "must increment line value when receive M(ove) action and current direction is E(ast)" do
-      params = %{direction: "E", column: 0, line: 0}
+      params = %{actions: ["M"], direction: "E", column: 0, line: 0}
       probe = Probe.new(params)
 
       assert {:ok, probe, updated_probe} = Probe.perform_action(probe, "M")

@@ -3,7 +3,7 @@ defmodule MarsExploration.Core.Probe do
   @valid_directions ["N", "S", "E", "W"]
   @valid_actions ["L", "R", "M"]
 
-  defstruct @enforce_keys
+  defstruct @enforce_keys ++ [:actions]
 
   def new(params) do
     if params_are_valid?(params) do
@@ -43,11 +43,21 @@ defmodule MarsExploration.Core.Probe do
   defp move(%{direction: "W", line: line} = probe), do: Map.put(probe, :line, line - 1)
 
   defp params_are_valid?(params) when is_map(params) do
-    direction_is_valid?(params) and position_is_valid?(params)
+    direction_is_valid?(params) and position_is_valid?(params) and actions_are_valid?(params)
   end
 
   defp direction_is_valid?(params) when is_map(params) do
     Map.get(params, :direction) in @valid_directions
+  end
+
+  defp actions_are_valid?(params) when is_map(params) do
+    params
+    |> Map.get(:actions)
+    |> Enum.all?(&action_is_valid?/1)
+
+  rescue
+    _ ->
+      false
   end
 
   defp position_is_valid?(params) when is_map(params) do
