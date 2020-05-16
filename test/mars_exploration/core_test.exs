@@ -17,9 +17,23 @@ defmodule MarsExploration.CoreTest do
     end
   end
 
-  # describe "create_probe/4" do
+  describe "create_probe/4" do
+    test "should return a probe when receive a valid parameters" do
+      assert {:ok, %Probe{} = probe} = Core.create_probe(0, 0, "N", ["M"])
+      assert probe.line == 0
+      assert probe.column == 0
+      assert probe.direction == "N"
+      assert probe.actions == ["M"]
+    end
 
-  # end
+    test "should return a error when receive a invalid parameters" do
+      assert :error = Core.create_probe(-1, 0, "N", ["M"])
+      assert :error = Core.create_probe(0, -1, "N", ["M"])
+      assert :error = Core.create_probe(0, 0, "X", ["M"])
+      assert :error = Core.create_probe(0, 0, "N", ["Z"])
+      assert :error = Core.create_probe(-1, "0", nil, [])
+    end
+  end
 
   # describe "set_probe_in_highland/2" do
 
