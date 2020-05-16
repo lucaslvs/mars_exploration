@@ -33,9 +33,9 @@ defmodule MarsExploration.Core do
     Highland.push_probe(highland, probe)
   end
 
-  def perform_action(%Highland{probes: probes} = highland, %Probe{} = probe, action) do
-    with {:ok, probe, %{column: column, line: line} = new_probe} <-
-           Probe.perform_action(probe, action),
+  def perform_next_action(%Highland{probes: probes} = highland, %Probe{} = probe) do
+    with {:ok, action, probe} <- Probe.get_next_action(probe),
+         {:ok, probe, %{column: column, line: line} = new_probe} <- Probe.perform_action(probe, action),
          true <- Highland.has_position?(highland, column, line) do
       updated_probes = update_probe(probes, probe, new_probe)
       {:ok, Map.put(highland, :probes, updated_probes)}
@@ -43,6 +43,10 @@ defmodule MarsExploration.Core do
       _ ->
         {:error, highland}
     end
+  end
+
+  def all_probe_actions_have_been_completed?(%Highland{probes: probes}) do
+    Enum.all?(probes, &(Enum.empty?(&1.actions)))
   end
 
   defp update_probe(probes, %{column: column, line: line, direction: direction}, new_probe) do

@@ -1,15 +1,26 @@
 defmodule MarsExploration.Core.Probe do
-  @enforce_keys [:direction, :column, :line]
+  @enforce_keys [:actions, :direction, :column, :line]
   @valid_directions ["N", "S", "E", "W"]
   @valid_actions ["L", "R", "M"]
 
-  defstruct @enforce_keys ++ [:actions]
+  defstruct @enforce_keys
 
   def new(params) do
     if params_are_valid?(params) do
       struct!(__MODULE__, params)
     else
       raise ArgumentError, "Invalid params"
+    end
+  end
+
+  def get_next_action(%__MODULE__{actions: actions} = probe) do
+    cond do
+      Enum.empty?(actions) ->
+        {:error, :no_found, probe}
+
+      true ->
+        [next_action | remaining_actions] = actions
+        {:ok, next_action, Map.put(probe, :actions, remaining_actions)}
     end
   end
 
