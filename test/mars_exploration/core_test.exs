@@ -71,7 +71,22 @@ defmodule MarsExploration.CoreTest do
     end
   end
 
-  # describe "all_probe_actions_have_been_completed/1" do
+  describe "all_probe_actions_have_been_completed?/1" do
+    test "should returns true when all probes complete yours actions" do
+      {:ok, highland} = Core.create_highland(0, 1)
+      {:ok, probe} = Core.create_probe(0, 0, "N", ["M"])
+      {:ok, highland} = Core.set_probe_in_highland(highland, probe)
+      {:ok, highland} = Core.perform_next_action(highland, probe)
 
-  # end
+      assert Core.all_probe_actions_have_been_completed?(highland) == true
+    end
+
+    test "should returns false when any probe as pending action" do
+      {:ok, highland} = Core.create_highland(0, 1)
+      {:ok, probe} = Core.create_probe(0, 0, "N", ["M"])
+      {:ok, highland} = Core.set_probe_in_highland(highland, probe)
+
+      assert Core.all_probe_actions_have_been_completed?(highland) == false
+    end
+  end
 end
