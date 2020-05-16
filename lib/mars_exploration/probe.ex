@@ -52,9 +52,9 @@ defmodule MarsExploration.Probe do
 
   defp position_is_valid?(params) when is_map(params) do
     Map.has_key?(params, :column) and
-    Map.has_key?(params, :line) and
-    params |> Map.get(:column) |> position_is_valid?() and
-    params |> Map.get(:line) |> position_is_valid?()
+      Map.has_key?(params, :line) and
+      params |> Map.get(:column) |> position_is_valid?() and
+      params |> Map.get(:line) |> position_is_valid?()
   end
 
   defp position_is_valid?(value) when is_integer(value), do: value >= 0

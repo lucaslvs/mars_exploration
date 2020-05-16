@@ -38,4 +38,65 @@ defmodule MarsExploration.HighlandTest do
       end)
     end
   end
+
+  describe "push_probe/2" do
+    alias MarsExploration.Probe
+
+    @highland_params %{column: 0, line: 0}
+    @valid_probe_param %{direction: "N", column: 0, line: 0}
+    @invalid_probe_params [
+      %{direction: "N", column: 2, line: 2},
+      %{direction: "N", column: 1, line: 2},
+      %{direction: "N", column: 2, line: 1}
+    ]
+
+    setup do
+      highland = Highland.new(@highland_params)
+      {:ok, highland: highland}
+    end
+
+    test "must push a probe when highland don't have a probe", %{highland: highland} do
+      probe = Probe.new(@valid_probe_param)
+
+      assert {:ok, %Highland{probes: [probe] = probes}} = Highland.push_probe(highland, probe)
+      assert Enum.empty?(probes) == false
+      assert length(probes) == 1
+    end
+
+    test "mush returns a error when try to push a probe with not exist position in highland", %{
+      highland: highland
+    } do
+      Enum.each(@invalid_probe_params, fn params ->
+        probe = Probe.new(params)
+
+        assert {:error, %Highland{probes: probes} = highland} =
+                 Highland.push_probe(highland, probe)
+
+        assert Enum.empty?(probes) == true
+      end)
+    end
+
+    test "must returns a error when try to psuh a probe in position occupied in highland", %{
+      highland: highland
+    } do
+      probe1 = Probe.new(@valid_probe_param)
+      probe2 = Probe.new(@valid_probe_param)
+
+      {:ok, highland} = Highland.push_probe(highland, probe1)
+
+      assert {:error, %Highland{probes: [probe1] = probes}} =
+               Highland.push_probe(highland, probe2)
+
+      assert Enum.empty?(probes) == false
+      assert length(probes) == 1
+    end
+  end
+
+  # describe "has_probe_in_position/3" do
+
+  # end
+
+  # describe "has_position?/3" do
+
+  # end
 end
