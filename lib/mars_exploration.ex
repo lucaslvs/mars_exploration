@@ -92,11 +92,12 @@ defmodule MarsExploration do
   defp create_probes(error), do: error
 
   defp set_probes({:ok, highland: highland, probes: probes}) do
-    highland = Enum.reduce(probes, highland, fn probe, updated_highland ->
-      {:ok, highland} = Core.set_probe_in_highland(updated_highland, probe)
+    highland =
+      Enum.reduce(probes, highland, fn probe, updated_highland ->
+        {:ok, highland} = Core.set_probe_in_highland(updated_highland, probe)
 
-      highland
-    end)
+        highland
+      end)
 
     {:ok, highland}
   rescue
@@ -107,14 +108,15 @@ defmodule MarsExploration do
   defp set_probes(error), do: error
 
   defp launch_probes({:ok, %{probes: probes} = highland}) do
-    highland = Enum.reduce_while(probes, highland, fn probe, updated_highland ->
-      if Core.all_probe_actions_have_been_completed?(updated_highland) do
-        {:halt, updated_highland}
-      else
-        {_, updated_highland} = Core.perform_next_action(updated_highland, probe)
-        {:cont, updated_highland}
-      end
-    end)
+    highland =
+      Enum.reduce_while(probes, highland, fn probe, updated_highland ->
+        if Core.all_probe_actions_have_been_completed?(updated_highland) do
+          {:halt, updated_highland}
+        else
+          {_, updated_highland} = Core.perform_next_action(updated_highland, probe)
+          {:cont, updated_highland}
+        end
+      end)
 
     if Core.all_probe_actions_have_been_completed?(highland) do
       highland
