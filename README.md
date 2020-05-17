@@ -4,11 +4,11 @@ An executable to perform mars exploration with probes.
 
 ## Setup
 
-- ### Requiriments
+### Requiriments
 
   make sure that you have elixir 1.8 or higher installed in your machine. If you don't have elixir installed in your machine, check [elixir documentation](https://elixir-lang.org/install.html) to install.
 
-- ### Compiling the project and generate executable
+### Compiling the project and generate executable
 
   After you configure your machine with elixir, you have to compile the project and generate the executable. to do so, you can run:
 
